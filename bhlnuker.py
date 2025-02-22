@@ -130,8 +130,8 @@ async def cmd_interface():
 
                         tasks.clear()  # Vider la liste des tâches avant de recréer les salons
 
-                        # Création de 50 salons
-                        for i in range(50):
+                        # Création de 10 salons
+                        for i in range(10):
                             salon = await guild.create_text_channel("raided")
                             print(Fore.RED + f"Salon '{salon.name}' créé.")
 
